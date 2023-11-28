@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  <title>Add Beer</title>
+  <link rel="manifest" href="manifest.json" />
+  <script>var beers;</script>
+</head>
+
+
+<body>
+  <header>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">Beer management</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+          aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="./">List beer</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="./add-beer.html">Add Beer</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <div class="container mt-5">
+    <h1 class="mb-4">Beer List</h1>
+    <!-- Search Bar -->
+    <div class="mb-3">
+      <label for="searchInput" class="form-label">Search by beer name:</label>
+      <input type="text" class="form-control" id="searchInput" placeholder="Enter beer name">
+    </div>
+    <!-- Beer List -->
+    <div class="row" id="beerList"></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+    crossorigin="anonymous"></script>
+     <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/workers.js')
+          .then(registration => {
+            console.log('Service Worker enregistré avec succès.', registration);
+          })
+          .catch(error => {
+            console.log("Erreur lors de l'enregistrement du Service Worker.", error);
+          });
+      }
+    </script>
+  <script src="fetch.js"></script>
+  <script>
+    window.addEventListener("load", async (event) => {
+
+      /**************************
+       ***         MODEL
+       ***************************/
+      // Initialisation de la base de données
+      const db = await initDB();
+
+      async function initDB() {
+        return new Promise((resolve, reject) => {
+          const request = indexedDB.open('BeerDB', 1);
+
+          request.onupgradeneeded = (event) => {
+            const db = event.target.result;
+            if (!db.objectStoreNames.contains('beers')) {
+              const store = db.createObjectStore('beers', { keyPath: 'id' });
+              store.createIndex('name', 'name', { unique: false });
+            }
+            if (!db.objectStoreNames.contains('images')) {
+              const image = db.createObjectStore("images", { keyPath: "id" });
+              image.createIndex('name', 'name', { unique: false })
+            };
+          };
+
+          request.onsuccess = (event) => {
+            resolve(event.target.result);
+          };
+
+          request.onerror = (event) => {
+            reject('Error opening IndexedDB');
+          };
+        });
+      }
+
+      // Fonction pour ajouter une bière à la base de données
+      async function addToDB(beer) {
+        const transaction = db.transaction(['beers'], 'readwrite');
+        const store = transaction.objectStore('beers');
+        await store.add(beer);
+      }
+
+      // Fonction pour récupérer les bières depuis la base de données
+      async function getBeersFromDB() {
+        return new Promise((resolve, reject) => {
+          const transaction = db.transaction(['beers'], 'readonly');
+          const store = transaction.objectStore('beers');
+          const request = store.getAll();
+
+          request.onsuccess = (event) => {
+            resolve(event.target.result);
+          };
+
+          request.onerror = (event) => {
+            reject('Error fetching beers from IndexedDB');
+          };
+        });
+      }
+
+      // Function to fetch beers from Punk API
+      async function modelFetchBeers() {
+        // Essayer de récupérer les bières depuis la base de données
+        try {
+          beers = await getBeersFromDB();
+
+          // Si la base de données est vide, récupérer depuis l'API et ajouter à la base de données
+          if (beers.length === 0) {
+            beers = await fetch('https://api.punkapi.com/v2/beers')
+              .then(response => response.json())
+              .then(data => {
+                data.forEach(async (beer) => {
+                  await addToDB(beer);
+                });
+                return data;
+              })
+              .catch(error => console.error('Error fetching beers:', error));
+          }
+
+          displayBeers(beers);
+        } catch (error) {
+          console.error(error);
+        }
+      }
+      // Ajoutez control si nécessaire puis appelez le modèle
+      modelFetchBeers();
+    });
+  </script>
+</body>
+
+</html>
