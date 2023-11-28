@@ -50,7 +50,7 @@
     crossorigin="anonymous"></script>
      <script>
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/workers.js')
+        navigator.serviceWorker.register('./workers.js')
           .then(registration => {
             console.log('Service Worker enregistré avec succès.', registration);
           })
