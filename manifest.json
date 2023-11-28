@@ -1,7 +1,7 @@
 {
     "name": "BeerManagement",
     "short_name": "All my beers",
-    "start_url" : "/index.html",
+    "start_url" : "./index.html",
     "icons": [
         {
             "src": "/android-chrome-192x192.png",
