@@ -1,7 +1,8 @@
 {
     "name": "BeerManagement",
     "short_name": "All my beers",
-    "start_url" : "./index.html",
+    "start_url": "./index.html",
+    "id": "./index.html?source=pwa",
     "icons": [
         {
             "src": "./android-chrome-192x192.png",
@@ -19,6 +20,30 @@
             "type": "image/png"
         }
     ],
+    "screenshots": [
+        {
+            "src": "android-chrome-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "form_factor": "wide",
+            "label": "Home beers app"
+        },
+        {
+            "src": "android-chrome-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "form_factor": "wide",
+            "label": "Beep app"
+        }
+    ],
+    "shortcuts": [
+      {
+        "name": "Add-Beer",
+        "short_name": "Add beer to the app",
+        "description": "Add your own beer to the app",
+        "url": "./add-beer.html?source=pwa",
+        "icons": [{ "src": "./apple-touch-icon.png", "sizes": "180x180" }]
+      }],
     "theme_color": "#ffffff",
     "background_color": "#ffffff",
     "display": "standalone"

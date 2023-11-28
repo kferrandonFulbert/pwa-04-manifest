@@ -1,11 +1,15 @@
 // service-worker.js
 
-const cacheName = 'my-pwa-cache-v1';
+const cacheName = 'beer-Management';
 
 // Liste des ressources à mettre en cache
 const resourcesToCache = [
-  '/',
-  'index.html',
+  './',
+  './index.html',
+  './add-beer.html',
+  './beer.jpeg',
+  './fetch.js',
+  './favicon.ico'
  // 'styles.css',
  // 'app.js',
  // 'images/logo.png',

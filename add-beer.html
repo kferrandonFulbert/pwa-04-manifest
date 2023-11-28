@@ -121,7 +121,10 @@
 
                     let beer = { 'id': uuidv4(), 'name': name, 'tagline': tagline, 'description': description }
                     beerStore.add(beer);
-
+                    alert("Your beer was added! Thanks!");
+                    name="";
+                    description="";
+                    tagline="";
                 };
                 /* const db = initDB();
                  const beerObjectStore = db
