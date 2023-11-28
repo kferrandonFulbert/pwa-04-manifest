@@ -21,7 +21,7 @@ if(url==undefined){
   return `
                 <div class="col-md-4 mb-4">
                     <div class="card">
-                        <img src="${url}" class="card-img-top" alt="${beer.name}" style="width:60%;height:200px;" >
+                        <img src="${url}" class="card-img-top" alt="${beer.name}" style="width: 150px;height: 250px;margin:auto;" >
                         <div class="card-body">
                             <h5 class="card-title">${beer.name}</h5>
                             <p class="card-text">${beer.description}</p>
