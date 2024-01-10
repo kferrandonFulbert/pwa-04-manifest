@@ -16,6 +16,7 @@ const resourcesToCache = [
   // Ajoutez ici toutes les ressources que vous souhaitez mettre en cache
 ];
 
+// Gestion de l'installation
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(cacheName)
