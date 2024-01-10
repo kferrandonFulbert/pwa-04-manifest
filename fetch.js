@@ -1,3 +1,5 @@
+var beers;
+
 /**************************
 ***         MODEL
 ***************************/
@@ -14,7 +16,7 @@ async function modelFetchBeers() {
 // function ECMA 6 represent the view template
 var template = (beer) => {
     url = beer.image_url;
-    console.log(url);
+   // console.log(url);
 if(url==undefined){
  url = "beer.jpeg";
 }
